@@ -1,0 +1,23 @@
+.login-form{
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 10px #8888
+}
+.login-form h3{
+    text-align: center;
+}
+.anc-form-group{
+    margin: 3rem;
+}
+.anc{
+    background-color: #CADCEA;
+    padding: 15px 20px;
+    border: 1px solid #007bff;
+    color: #222;
+    text-decoration: none !important;
+}
+.anc:hover{
+background-color: #005DC5 !important;
+color: #ffffff !important;
+}

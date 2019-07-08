@@ -1,0 +1,50 @@
+{%extends 'lsmanage/base.html'%}
+{%block title%}Library Management System{% endblock %}
+{% load crispy_forms_tags %}
+{%block content%}
+      <div class="container my-5">
+         {% if messages %}
+                   {% for message in messages %}
+                        <div class="alert alert-dismissible fade show {{ message.tags }}" role="alert">
+                           {{ message }}
+                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                               <span aria-hidden="true">&times;</span>
+                           </button>
+                        </div>
+                   {% endfor %}
+             {% endif %}
+        <div class="login-form">
+            <h3>Librarian List</h3>
+             <table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Username</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Address</th>
+      <th scope="col">City</th>
+      <th scope="col">Contact</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for librarian in librarians%}
+    <tr>
+      <th scope="row">{{librarian.id}}</th>
+      <td>{{librarian.username}}</td>
+      <td>{{librarian.first_name}} {{librarian.last_name}}</td>
+      <td>{{librarian.email}}</td>
+      <td>{{librarian.address}}</td>
+      <td>{{librarian.city}}</td>
+      <td>{{librarian.phone}}</td>
+      <td><a href="#" class='btn btn-primary'>Edit</a> <a href="/deletelibrarian/{{librarian.id}}" class='btn btn-primary' onclick="return confirm('Are you want to delete?')">Delete</a></td>
+    </tr>
+    {% endfor %}
+    
+  </tbody>
+</table>
+<a href="{% url 'admin-dashboard'%}" class='btn btn-primary'>Back</a>
+         </div>
+      </div>
+{% endblock %}

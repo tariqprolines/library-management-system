@@ -1,0 +1,23 @@
+{%extends 'lsmanage/base.html'%}
+{%block title%}Library Management System{% endblock %}
+{%block content%}
+    <div class="container d-flex flex-column w-50 vh-100 justify-content-center">
+      <div class="login-form">
+        <div class="form-group">
+          <h3>Admin Section</h3>
+        </div>
+        <div class="form-group anc-form-group">
+          <a href="{% url 'add-librarian'%}" class="anc d-flex justify-content-center">Add Librarian</a>
+        </div>
+        <div class="form-group anc-form-group">
+          <a href="{% url 'view-librarian' %}" class="anc d-flex justify-content-center">View Librarian</a>
+        </div>
+        <!-- <div class="form-group anc-form-group">
+          <a href="#" class="anc d-flex justify-content-center">Delete Librarian</a>
+        </div> -->
+         <div class="form-group anc-form-group">
+          <a href="{%url 'logout'%}" class="anc d-flex justify-content-center">Logout</a>
+        </div>
+      </div>
+    </div>
+{% endblock %}
