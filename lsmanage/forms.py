@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Book
+from .models import Book, IssueBook
 
 class UserForm(UserCreationForm):
 	first_name=forms.CharField(max_length=30, required=False, help_text='Optional.')
@@ -25,6 +25,28 @@ class BookForm(forms.ModelForm):
 	class Meta:
 		model= Book
 		fields=('call_no', 'name', 'author', 'publisher', 'quantity')
+
+class IssueBookForm(forms.ModelForm):
+
+	student_id=forms.IntegerField()
+	student_name=forms.CharField(max_length=30,)
+	student_contact=forms.CharField(max_length=20,)
+
+	class Meta:
+		model= IssueBook
+		fields= ('book','student_id','student_name','student_contact')
+
+class ReturnBookForm(forms.ModelForm):
+
+	student_id=forms.IntegerField()
+
+	class Meta:
+		model= IssueBook
+		fields= ('book','student_id')		
+	
+
+
+
 
 
 

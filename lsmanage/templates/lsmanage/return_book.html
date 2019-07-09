@@ -1,0 +1,25 @@
+{%extends 'lsmanage/base.html'%}
+{%block title%}Library Management System{% endblock %}
+{% load crispy_forms_tags %}
+{%block content%}
+      <div class="container d-flex flex-column justify-content-center my-5">
+        <div class="login-form">
+            <h3>Return Book</h3>
+             {% if messages %}
+                   {% for message in messages %}
+                        <div class="alert alert-dismissible fade show {{ message.tags }}" role="alert">
+                           {{ message }}
+                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                               <span aria-hidden="true">&times;</span>
+                           </button>
+                        </div>
+                   {% endfor %}
+             {% endif %}
+            <form method="post" action="{% url 'add-book'%}">{%csrf_token%}
+               {% csrf_token %}
+                 {{ return_form|crispy}}
+              <button type="submit" class="btn btn-primary">Add Book</button> <a href="{% url 'librarian-dashboard'%}" class="btn btn-primary">Back</a>
+            </form>
+         </div>
+      </div>
+{% endblock %}

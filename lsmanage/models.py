@@ -10,9 +10,22 @@ class Book(models.Model):
 	quantity=models.IntegerField(default=0)
 	issued=models.IntegerField(default=0)
 	created_date=models.DateField(auto_now_add=True)
-	user=models.ForeignKey(User, on_delete=models.CASCADE)  
+	user=models.ForeignKey(User, null=True, blank=True,on_delete=models.SET_NULL)  
 
 	def __str__(self):
 		return self.name
+
+class IssueBook(models.Model):
+	id= models.AutoField(primary_key=True)
+	student_id=models.IntegerField(null=True, blank=True)
+	student_name=models.CharField(max_length=30, null=True, blank=True)
+	student_contact=models.CharField(max_length=20, null=True, blank=True)
+	issued_date=models.DateField(auto_now_add=True)
+	book= models.ForeignKey(Book, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.student_name
+
+
 
 

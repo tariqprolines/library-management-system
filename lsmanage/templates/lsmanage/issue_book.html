@@ -1,0 +1,26 @@
+{%extends 'lsmanage/base.html'%}
+{%block title%}Library Management System{% endblock %}
+{% load crispy_forms_tags %}
+{%block content%}
+      <div class="container d-flex flex-column justify-content-center my-5">
+        <div class="login-form">
+            <h3>Issue Book</h3>
+             {% if messages %}
+                   {% for message in messages %}
+                        <div class="alert alert-dismissible fade show {{ message.tags }}" role="alert">
+                           {{ message }}
+                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                               <span aria-hidden="true">&times;</span>
+                           </button>
+                        </div>
+                   {% endfor %}
+             {% endif %}
+            <form method="post" action="{% url 'issue-book'%}">{%csrf_token%}
+               {% csrf_token %}
+                 {{ issuebook_form|crispy}}
+              <button type="submit" class="btn btn-primary">Issue Book</button> <a href="{% url 'librarian-dashboard'%}" class="btn btn-primary">Back</a>
+              <p class='mt-5'>Note: Please check Student ID carefully before issuing book!</p>
+            </form>
+         </div>
+      </div>
+{% endblock %}
