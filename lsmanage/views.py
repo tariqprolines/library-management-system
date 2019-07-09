@@ -131,7 +131,17 @@ def return_book(request):
     if request.method == 'POST':
         return_form=ReturnBookForm(request.POST)
         if return_form.is_valid:
-            messages.success(request,'Book has returned successfully.')
+            book_id=request.POST.get('book')
+            stud_id=request.POST.get('student_id')
+            return_book=IssueBook.objects.filter(student_id=stud_id,book_id=book_id).delete()
+            if return_book is not None:
+                books=Book.objects.filter(id=book_id).values('quantity','issued')[0]
+                quantity=books['quantity']+1
+                issued = books['issued']-1
+                update_book= Book.objects.filter(id=book_id).update(quantity=quantity,issued=issued)
+                messages.success(request,'Book has returned successfully.')
+            else:
+                messages.error(request,'Something Wrong')    
     else:
         return_form=ReturnBookForm()        
     return render(request, 'lsmanage/return_book.html',{'return_form':return_form})           
