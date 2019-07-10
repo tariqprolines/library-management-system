@@ -38,8 +38,8 @@ def add_librarian(request):
         if user_form.is_valid() and profile_form.is_valid:
             user_form.save()
             profile_form.save(commit=False)
-            user= User.objects.latest('id')
-            user_id=user.id
+            user_id= User.objects.latest('id')
+            profile_form.user=user_id.id
             profile_form.save()
             username=request.POST.get('username')
             messages.success(request, f'{username} added successfully as a Librarian!')
