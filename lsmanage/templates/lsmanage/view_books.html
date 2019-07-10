@@ -40,8 +40,8 @@
       <td>{{book.quantity}}</td>
       <td>{{book.issued}}</td>
       <td>{{book.created_date}}</td>
-      <td><a href="#" class='btn btn-primary'>Edit</a> 
-        <a href="/deletelibrarian/{{book.id}}" class='btn btn-primary' onclick="return confirm('Are you want to delete?')">Delete</a>
+      <td><a href="/editbook/{{book.id}}" class='btn btn-primary'>Edit</a> 
+        <a href="/deletebook/{{book.id}}" class='btn btn-primary' onclick="return confirm('Are you want to delete this book.?')">Delete</a>
       </td>
     </tr>
     {% endfor %}

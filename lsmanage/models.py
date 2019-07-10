@@ -1,6 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Profile(models.Model):
+    user= models.OneToOneField(User, on_delete=models.CASCADE)
+    phone= models.CharField(max_length=20 , default='')
+    address= models.CharField(max_length=20, default='')
+    city= models.CharField(max_length=50, null=True, blank= True)
+   
+
 class Book(models.Model):
 	id= models.AutoField(primary_key=True)
 	call_no= models.CharField(max_length=20, null=True, blank= True, unique=True)

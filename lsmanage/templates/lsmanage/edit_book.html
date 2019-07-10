@@ -4,7 +4,7 @@
 {%block content%}
       <div class="container d-flex flex-column justify-content-center my-5">
         <div class="login-form">
-            <h3>Add Librarian</h3>
+            <h3>Edit Book</h3>
              {% if messages %}
                    {% for message in messages %}
                         <div class="alert alert-dismissible fade show {{ message.tags }}" role="alert">
@@ -15,11 +15,10 @@
                         </div>
                    {% endfor %}
              {% endif %}
-            <form method="post" action="{% url 'add-librarian'%}">{%csrf_token%}
+            <form method="post" action="{% url 'edit-book'%}">{%csrf_token%}
                {% csrf_token %}
-                 {{ user_form|crispy}}
-                 {{ profile_form|crispy}}
-              <button type="submit" class="btn btn-primary">Add Librarian</button> <a href="{% url 'admin-dashboard'%}" class="btn btn-primary">Back</a>
+                 {{edit_form|crispy}}
+              <button type="submit" class="btn btn-primary">Update Book</button> <a href="{% url 'librarian-dashboard'%}" class="btn btn-primary">Back</a>
             </form>
          </div>
       </div>
