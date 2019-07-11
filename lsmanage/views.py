@@ -37,7 +37,7 @@ def add_librarian(request):
         profile_form=ProfileForm(request.POST)
         if user_form.is_valid() and profile_form.is_valid:
             user_form.save()
-            profile_form.save(commit=False)
+            profile_form=profile_form.save(commit=False)
             user_id= User.objects.latest('id')
             profile_form.user=user_id.id
             profile_form.save()
@@ -98,6 +98,7 @@ def add_book(request):
             form.save()
             book=request.POST.get('name')
             messages.success(request,f'"{book}" book has been added successfully.')
+            return redirect('view-books')
         else:
             messages.error(request,'Something Wrong.')  
     else:
@@ -110,15 +111,17 @@ def view_books(request):
     return render(request, 'lsmanage/view_books.html',{'books':books}) 
 
 @login_required(login_url='/librarianlogin')   
-def edit_book(request,b_id):   
-    obj=get_object_or_404(Book,pk=b_id)
+
+def edit_book(request,id):   
+    obj=get_object_or_404(Book,id=id)
     if request.method=='POST':
         edit_form=BookForm(request.POST,instance=obj)
         if edit_form.is_valid:
             edit_form=edit_form.save(commit=False)
             edit_form.user=request.user
             edit_form.save()
-            messages.successfully('Records have updated successfully.')
+            messages.success(request,'Records have updated successfully.')
+            return redirect('view-books')
         else:
             edit_form=BookForm(instance=obj)
             messages.error('Something Wrong.')    
@@ -141,12 +144,12 @@ def issue_book(request):
             book_id=request.POST.get('book')
             stud_id=request.POST.get('student_id')
             studentname=request.POST.get('student_name')
-            issued_book_status= IssueBook.objects.filter(student_id=stud_id,book_id=book_id)
-            if issued_book_status is not None:
+            issued_book_status= IssueBook.objects.filter(student_id=stud_id,book_id=book_id).count()
+            if issued_book_status > 0:
                 messages.warning(request,f'{studentname} already has this book.')
             else:    
                 books=Book.objects.filter(id=book_id).values('quantity','issued')[0]
-                if book['quantity'] > 0:
+                if books['quantity'] > 0:
                     quantity=books['quantity']-1
                     issued = books['issued']+1
                     update_book= Book.objects.filter(id=book_id).update(quantity=quantity,issued=issued)

@@ -15,8 +15,8 @@
                         </div>
                    {% endfor %}
              {% endif %}
-            <form method="post" action="{% url 'edit-book'%}">{%csrf_token%}
-               {% csrf_token %}
+            <form method="post" action="">{%csrf_token%}
+                  {% csrf_token %}
                  {{edit_form|crispy}}
               <button type="submit" class="btn btn-primary">Update Book</button> <a href="{% url 'librarian-dashboard'%}" class="btn btn-primary">Back</a>
             </form>

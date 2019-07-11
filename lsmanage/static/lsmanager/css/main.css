@@ -21,3 +21,28 @@
 background-color: #005DC5 !important;
 color: #ffffff !important;
 }
+
+/*Responsive design css*/
+
+@media(min-width:992px){
+   .dataTables_wrapper{
+    overflow-x: hidden;
+   } 
+}
+@media(min-width:768px) and (max-width:991px){
+
+} 
+@media(min-width:575px) and (max-width:767px){
+    
+}
+@media(min-width:480px) and (max-width:574px){
+    .dataTables_wrapper{
+    overflow-x: scroll;
+   }
+}
+@media(max-width:479px){
+   
+   .dataTables_wrapper{
+    overflow-x: scroll;
+   }
+}
