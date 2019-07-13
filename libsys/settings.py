@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'crispy_forms',
 ]
 
+AUTH_USER_MODEL = 'lsmanage.MyUser' # new
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

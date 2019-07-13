@@ -1,12 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
-class Profile(models.Model):
-    user= models.OneToOneField(User, on_delete=models.CASCADE)
-    phone= models.CharField(max_length=20 , default='')
-    address= models.CharField(max_length=20, default='')
-    city= models.CharField(max_length=50, null=True, blank= True)
-   
+class MyUser(AbstractUser):
+    phone=models.CharField(max_length=20,null=True,)
+    address=models.TextField(null=True, blank=True)
+    city=models.CharField(max_length=30,null=True,)
+
+    def __str__(self):
+        return self.username
 
 class Book(models.Model):
 	id= models.AutoField(primary_key=True)
@@ -17,7 +20,7 @@ class Book(models.Model):
 	quantity=models.IntegerField(default=0)
 	issued=models.IntegerField(default=0)
 	created_date=models.DateField(auto_now_add=True)
-	user=models.ForeignKey(User, null=True, blank=True,on_delete=models.SET_NULL)  
+	user=models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
 
 	def __str__(self):
 		return self.name
@@ -32,7 +35,3 @@ class IssueBook(models.Model):
 
 	def __str__(self):
 		return self.student_name
-
-
-
-

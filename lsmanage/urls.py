@@ -6,6 +6,7 @@ urlpatterns = [
     path('adminlogin', views.admin_login, name='admin-login'),
     path('admindashboard', views.admin_dashboard, name='admin-dashboard'),
     path('addlibrarian', views.add_librarian, name='add-librarian'),
+    path('editlibrarian/<int:id>', views.edit_librarian, name='edit-librarian'),
     path('viewlibrarian', views.view_librarian, name='view-librarian'),
     path('deletelibrarian/<int:id>', views.delete_librarian, name='delete-librarian'),
 

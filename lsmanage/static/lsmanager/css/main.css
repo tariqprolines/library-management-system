@@ -28,21 +28,32 @@ color: #ffffff !important;
    .dataTables_wrapper{
     overflow-x: hidden;
    } 
+   .width-container{
+    width:50%;
+   }
 }
 @media(min-width:768px) and (max-width:991px){
-
+   .width-container{
+    width:100%;
+   }
 } 
 @media(min-width:575px) and (max-width:767px){
-    
+    width:100%;
 }
 @media(min-width:480px) and (max-width:574px){
     .dataTables_wrapper{
-    overflow-x: scroll;
+    overflow-x: scroll;;
+   }
+   .width-container{
+    width:100%;
    }
 }
 @media(max-width:479px){
    
    .dataTables_wrapper{
     overflow-x: scroll;
+   }
+   .width-container{
+    width:100%;
    }
 }

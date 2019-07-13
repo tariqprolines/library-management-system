@@ -1,18 +1,20 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate,logout as auth_logout
-from .forms import UserForm, BookForm, IssueBookForm, ReturnBookForm, ProfileForm
+from .forms import MyUserForm, BookForm, IssueBookForm, ReturnBookForm, UpdateUserForm
 from django.contrib import messages
-from django.contrib.auth.models import User
-from .models import Book, IssueBook, Profile
-from django.db.models import Max
+# from django.contrib.auth.models import User
+from .models import Book, IssueBook
+from .models import MyUser as User
 
 def index(request):
     return render(request,'lsmanage/index.html')
 def admin_login(request):
     if request.user.is_authenticated and request.user.is_superuser==True:
         return redirect('admin-dashboard')
-    else:    
+    elif request.user.is_authenticated and request.user.is_superuser==False:
+        return redirect('librarian-dashboard')
+    else:
         if request.method=='POST':
             username=request.POST.get('username')
             password=request.POST.get('password')
@@ -33,24 +35,31 @@ def admin_dashboard(request):
 @login_required(login_url='/adminlogin')
 def add_librarian(request):
     if request.method == 'POST':
-        user_form = UserForm(request.POST)
-        profile_form=ProfileForm(request.POST)
-        if user_form.is_valid() and profile_form.is_valid:
+        user_form = MyUserForm(request.POST)
+        if user_form.is_valid():
             user_form.save()
-            profile_form=profile_form.save(commit=False)
-            user_id= User.objects.latest('id')
-            profile_form.user=user_id.id
-            profile_form.save()
             username=request.POST.get('username')
             messages.success(request, f'{username} added successfully as a Librarian!')
-            return redirect('add-librarian')
+            return redirect('view-librarian')
     else:
-        user_form = UserForm()
-        profile_form=ProfileForm()
+        user_form = MyUserForm()
     return render(request, 'lsmanage/add_librarian.html', {
-        'user_form': user_form,
-        'profile_form':profile_form
+        'user_form': user_form
     })
+
+def edit_librarian(request,id):
+    obj=get_object_or_404(User,id=id)
+    if request.method=='POST':
+        edit_user=UpdateUserForm(request.POST,instance=obj)
+        if edit_user.is_valid():
+            edit_user.save()
+            messages.success(request,'Records have been updated successfully.')
+            return redirect('view-librarian')
+        else:
+            edit_user=UpdateUserForm(instance=obj)
+            messages.error(request,'Something Wrong.')
+    edit_user=UpdateUserForm(instance=obj)
+    return render(request, 'lsmanage/edit_librarian.html',{'edit_user':edit_user})
 
 @login_required(login_url='/adminlogin')
 def view_librarian(request):
@@ -60,7 +69,7 @@ def view_librarian(request):
 @login_required(login_url='/adminlogin')
 def delete_librarian(request,id):
     username=User.objects.filter(id=id)
-    dellibrarian= User.objects.filter(id=id).delete()   
+    dellibrarian= User.objects.filter(id=id).delete()
     if dellibrarian:
         messages.success(request, f'{username} has been deleted successfully!')
         return redirect('view-librarian')
@@ -70,7 +79,9 @@ def delete_librarian(request,id):
 def librarian_login(request):
     if request.user.is_authenticated and request.user.is_superuser==False:
         return redirect('librarian-dashboard')
-    else:    
+    elif request.user.is_authenticated and request.user.is_superuser==True:
+        return redirect('admin-dashboard')
+    else:
         if request.method=='POST':
                 username=request.POST.get('username')
                 password=request.POST.get('password')
@@ -82,11 +93,11 @@ def librarian_login(request):
                     return redirect('librarian-dashboard')
                 else:
                     messages.error(request, 'Username or Password is not correct!')
-        return render(request, 'lsmanage/librarian_login.html')  
+        return render(request, 'lsmanage/librarian_login.html')
 
 @login_required(login_url='/librarianlogin')
 def librarian_dashboard(request):
-    return render(request,'lsmanage/librarian_dashboard.html')       
+    return render(request,'lsmanage/librarian_dashboard.html')
 
 @login_required(login_url='/librarianlogin')
 def add_book(request):
@@ -100,19 +111,19 @@ def add_book(request):
             messages.success(request,f'"{book}" book has been added successfully.')
             return redirect('view-books')
         else:
-            messages.error(request,'Something Wrong.')  
+            messages.error(request,'Something Wrong.')
     else:
-        book_form=BookForm()          
-    return render(request, 'lsmanage/add_book.html',{'book_form':book_form}) 
+        book_form=BookForm()
+    return render(request, 'lsmanage/add_book.html',{'book_form':book_form})
 
-@login_required(login_url='/librarianlogin')    
+@login_required(login_url='/librarianlogin')
 def view_books(request):
     books=Book.objects.all()
-    return render(request, 'lsmanage/view_books.html',{'books':books}) 
+    return render(request, 'lsmanage/view_books.html',{'books':books})
 
-@login_required(login_url='/librarianlogin')   
+@login_required(login_url='/librarianlogin')
 
-def edit_book(request,id):   
+def edit_book(request,id):
     obj=get_object_or_404(Book,id=id)
     if request.method=='POST':
         edit_form=BookForm(request.POST,instance=obj)
@@ -124,19 +135,19 @@ def edit_book(request,id):
             return redirect('view-books')
         else:
             edit_form=BookForm(instance=obj)
-            messages.error('Something Wrong.')    
+            messages.error('Something Wrong.')
     edit_form=BookForm(instance=obj)
     return render(request, 'lsmanage/edit_book.html',{'edit_form':edit_form})
 
-@login_required(login_url='/librarianlogin')   
+@login_required(login_url='/librarianlogin')
 def delete_book(request,b_id):
     bookname=Book.objects.filter(id=b_id).first()
-    delbook= Book.objects.filter(id=b_id).delete()   
+    delbook= Book.objects.filter(id=b_id).delete()
     if delbook:
         messages.success(request, f'"{bookname}" book has been deleted successfully!')
         return redirect('view-books')
 
-@login_required(login_url='/librarianlogin')    
+@login_required(login_url='/librarianlogin')
 def issue_book(request):
     if request.method== 'POST':
         issuebook_form= IssueBookForm(request.POST)
@@ -147,7 +158,7 @@ def issue_book(request):
             issued_book_status= IssueBook.objects.filter(student_id=stud_id,book_id=book_id).count()
             if issued_book_status > 0:
                 messages.warning(request,f'{studentname} already has this book.')
-            else:    
+            else:
                 books=Book.objects.filter(id=book_id).values('quantity','issued')[0]
                 if books['quantity'] > 0:
                     quantity=books['quantity']-1
@@ -156,19 +167,19 @@ def issue_book(request):
                     issuebook_form.save()
                     messages.success(request,f'Book has been issued to "{studentname}"')
                 else:
-                    messages.warning(request, 'This book has not enough quantiy for issue.')    
+                    messages.warning(request, 'This book has not enough quantiy for issue.')
         else:
-            messages.error(request,'Something Wrong in form submission.')    
+            messages.error(request,'Something Wrong in form submission.')
     else:
         issuebook_form=IssueBookForm()
-    return render(request,'lsmanage/issue_book.html', {'issuebook_form':issuebook_form})      
+    return render(request,'lsmanage/issue_book.html', {'issuebook_form':issuebook_form})
 
-@login_required(login_url='/librarianlogin') 
+@login_required(login_url='/librarianlogin')
 def view_issued_books(request):
     issued_books= IssueBook.objects.all().select_related('book')
-    return render(request, 'lsmanage/view_issued_books.html',{'issued_books':issued_books})    
+    return render(request, 'lsmanage/view_issued_books.html',{'issued_books':issued_books})
 
-@login_required(login_url='/librarianlogin') 
+@login_required(login_url='/librarianlogin')
 def return_book(request):
     if request.method == 'POST':
         return_form=ReturnBookForm(request.POST)
@@ -183,10 +194,10 @@ def return_book(request):
                 update_book= Book.objects.filter(id=book_id).update(quantity=quantity,issued=issued)
                 messages.success(request,'Book has returned successfully.')
             else:
-                messages.error(request,'Something Wrong')    
+                messages.error(request,'Something Wrong')
     else:
-        return_form=ReturnBookForm()        
-    return render(request, 'lsmanage/return_book.html',{'return_form':return_form})           
+        return_form=ReturnBookForm()
+    return render(request, 'lsmanage/return_book.html',{'return_form':return_form})
 
 def logout(request):
     auth_logout(request)
